@@ -1,0 +1,93 @@
+class Product:
+    def __init__(self, name, price):
+        self.name = name.title()
+        self.price = price
+
+    def __str__(self):
+        return f"{self.name} - ₹{self.price}"
+
+
+class ShoppingCart:
+    def __init__(self):
+        self.__items = {}   # {product_name: [product_obj, quantity]}
+
+    def add_item(self, product, qty):
+        if product.name in self.__items:
+            self.__items[product.name][1] += qty
+        else:
+            self.__items[product.name] = [product, qty]
+
+        print(f"✅ {product.name} (x{qty}) added to cart")
+
+    def remove_item(self, name):
+        if name in self.__items:
+            del self.__items[name] 
+            print(f"🗑️ {name} removed from cart")
+        else:
+            print("❌ Item not found")
+
+    def show_cart(self):
+        if not self.__items:
+            print("🛒 Cart is empty")
+            return
+
+        print("\n--------- YOUR CART ---------")
+        total = 0
+
+        for product, qty in self.__items.values():
+            subtotal = product.price * qty
+            total += subtotal
+            print(f"{product.name:<15} x{qty:<3} = ₹{subtotal}")
+
+        print("-----------------------------")
+        print(f"Total Amount : ₹{total}")
+        print("-----------------------------")
+
+    def checkout(self):
+        if not self.__items:
+            print("Cart is empty")
+            return
+
+        self.show_cart()
+        print("🎉 Order placed successfully!")
+        self.__items.clear()
+
+
+# -------- Main Program --------
+
+cart = ShoppingCart()
+
+while True:
+    print("\n====== SHOPPING CART MENU ======")
+    print("1. Add Item")
+    print("2. Remove Item")
+    print("3. View Cart")
+    print("4. Checkout")
+    print("5. Exit")
+
+    choice = input("Enter choice: ")
+
+    if choice == "1":
+        name = input("Product name: ")
+        price = float(input("Price: "))
+        qty = int(input("Quantity: "))
+
+        p = Product(name, price)
+        cart.add_item(p, qty)
+
+    elif choice == "2":
+        name = input("Enter item name to remove: ").title()
+        cart.remove_item(name)
+
+    elif choice == "3":
+        cart.show_cart()
+
+    elif choice == "4":
+        cart.checkout()
+
+    elif choice == "5":
+        print("Thank you for shopping with us ❤️")
+        break
+
+    else:
+        print("Invalid choice")
